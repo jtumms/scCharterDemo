@@ -3,7 +3,6 @@ package com.tummsmedia.controllers;
 import com.tummsmedia.entities.*;
 import com.tummsmedia.services.*;
 import jodd.json.JsonParser;
-import jodd.typeconverter.TypeConverter;
 import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,8 +19,6 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by john.tumminelli on 1/18/17.
@@ -178,7 +174,7 @@ public class MainController {
             HashMap<String, Integer> orgTot = new HashMap<>();
             HashMap<String, String> academicPercent = new HashMap<>();
             HashMap<String, String> financialPercent = new HashMap<>();
-            HashMap<String, String > orgPercent = new HashMap<>();
+            HashMap<String, String> orgPercent = new HashMap<>();
             school.put("school", dp.getSchoolName());
             year.put("year", dp.getYearOpened());
             Class c1 = ap.getClass();
@@ -188,22 +184,24 @@ public class MainController {
                 fields[i].setAccessible(true);
                 Object object = fields[i].get(ap);
                 fieldValues.add(object);
-                int metCount = 0;
-                int notMetCount = 0;
-                for (Object o : fieldValues) {
-
-                    if (o.toString().equals("Exceeds") || o.toString().equals("Meets")) {
-                        metCount++;
-                    } else if (o.toString().equals("Not Met") || o.toString().equals("Far Below")) {
-                        notMetCount++;
-                    }
-                }
-                academicMet.put("Met", metCount);
-                academicTot.put("Total", metCount + notMetCount);
-                DecimalFormat df = new DecimalFormat("#%");
-                String acPer = df.format(metCount / (metCount + notMetCount));
-                academicPercent.put("academic%", acPer);
             }
+            int metCount = 0;
+            int notMetCount = 0;
+            for (Object o : fieldValues) {
+
+                if (o.toString().contains("Exceeds") || o.toString().contains("Meets")) {
+                    metCount++;
+                } else if (o.toString().contains("Not Met") || o.toString().contains("Far Below")) {
+                    notMetCount++;
+                }
+            }
+            academicMet.put("Met", metCount);
+            academicTot.put("Total", metCount + notMetCount);
+            DecimalFormat df = new DecimalFormat("#%");
+            String acPer = df.format(metCount / (metCount + notMetCount));
+            academicPercent.put("academic%", acPer);
+
+
             Class c2 = fp.getClass();
             ArrayList<Object> financialValues = new ArrayList<>();
             Field[] fields2 = c2.getDeclaredFields();
@@ -211,45 +209,47 @@ public class MainController {
                 fields2[i].setAccessible(true);
                 Object object2 = fields2[i].get(fp);
                 financialValues.add(object2);
-                int finMetCount = 0;
-                int finNotMetCount = 0;
-                for (Object o : financialValues) {
-
-                    if (o.toString().equals("Meets Standard") || o.toString().equals("Exceeds")) {
-                        finMetCount++;
-                    } else if (o.toString().equals("Does Not Meet Standard") || o.toString().equals("Far Below")) {
-                        finNotMetCount++;
-                    }
-                }
-                financialMet.put("Met", finMetCount);
-                financialTot.put("Total", finMetCount + finNotMetCount);
-                DecimalFormat df = new DecimalFormat("#%");
-                String finPer = df.format(finMetCount / (finMetCount + finNotMetCount));
-                financialPercent.put("financial%", finPer);
             }
+            int finMetCount = 0;
+            int finNotMetCount = 0;
+            for (Object o : financialValues) {
+
+                if (o.toString().contains("Meets Standard") || o.toString().contains("Exceeds")) {
+                    finMetCount++;
+                } else if (o.toString().contains("Does Not Meet Standard") || o.toString().contains("Far Below")) {
+                    finNotMetCount++;
+                }
+            }
+            financialMet.put("Met", finMetCount);
+            financialTot.put("Total", finMetCount + finNotMetCount);
+            DecimalFormat df2 = new DecimalFormat("#%");
+            String finPer = df2.format(finMetCount / (finMetCount + finNotMetCount));
+            financialPercent.put("financial%", finPer);
+
             Class c3 = op.getClass();
             ArrayList<Object> orgValues = new ArrayList<>();
             Field[] fields3 = c3.getDeclaredFields();
-            for (int i = 0; i < fields2.length; i++) {
-                fields2[i].setAccessible(true);
-                Object object3 = fields2[i].get(op);
+            for (int i = 0; i < fields3.length; i++) {
+                fields3[i].setAccessible(true);
+                Object object3 = fields3[i].get(op);
                 orgValues.add(object3);
-                int orgMetCount = 0;
-                int orgNotMetCount = 0;
-                for (Object o : orgValues) {
-
-                    if (o.toString().equals("Meets Standard") || o.toString().equals("Exceeds")) {
-                        orgMetCount++;
-                    } else if (o.toString().equals("Does Not Meet Standard") || o.toString().equals("Far Below")) {
-                        orgNotMetCount++;
-                    }
-                }
-                orgMet.put("Met", orgMetCount);
-                orgTot.put("Total", orgMetCount + orgNotMetCount);
-                DecimalFormat df = new DecimalFormat("#%");
-                String orgPer = df.format(orgMetCount / (orgMetCount + orgNotMetCount));
-                orgPercent.put("org%", orgPer);
             }
+            int orgMetCount = 0;
+            int orgNotMetCount = 0;
+            for (Object o : orgValues) {
+
+                if (o.toString().contains("Meets Standard") || o.toString().contains("Exceeds")) {
+                    orgMetCount++;
+                } else if (o.toString().contains("Does Not Meet Standard") || o.toString().contains("Far Below")) {
+                    orgNotMetCount++;
+                }
+            }
+            orgMet.put("Met", orgMetCount);
+            orgTot.put("Total", orgMetCount + orgNotMetCount);
+            DecimalFormat df3 = new DecimalFormat("#%");
+            String orgPer = df3.format(orgMetCount / (orgMetCount + orgNotMetCount));
+            orgPercent.put("org%", orgPer);
+
             schoolSummaryList.add(school);
             schoolSummaryList.add(year);
             schoolSummaryList.add(academicMet);
@@ -261,8 +261,8 @@ public class MainController {
             schoolSummaryList.add(academicPercent);
             schoolSummaryList.add(financialPercent);
             schoolSummaryList.add(orgPercent);
+
         }
         return new ResponseEntity<Object>(schoolSummaryList, HttpStatus.OK);
     }
-
 }
