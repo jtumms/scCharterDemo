@@ -232,12 +232,12 @@ public class MainController {
             }
             individualSchool.add(orgMetCount);
             individualSchool.add(orgMetCount + orgNotMetCount);
-            float academicPercentMet = ((float) metCount / (metCount + notMetCount));
-            float financialPercentMet = ((float) finMetCount / (finMetCount + finNotMetCount));
-            float orgPercentMet = ((float) orgMetCount / (orgMetCount + orgNotMetCount));
-            individualSchool.add(academicPercentMet * 100);
-            individualSchool.add(financialPercentMet * 100);
-            individualSchool.add(orgPercentMet * 100);
+            float academicPercentMet = ((float) metCount / (metCount + notMetCount) * 100);
+            float financialPercentMet = ((float) finMetCount / (finMetCount + finNotMetCount) * 100);
+            float orgPercentMet = ((float) orgMetCount / (orgMetCount + orgNotMetCount) * 100);
+            individualSchool.add(String.format("%.1f", academicPercentMet));
+            individualSchool.add(String.format("%.1f", financialPercentMet));
+            individualSchool.add(String.format("%.1f", orgPercentMet));
 
             schoolSummaryList.add(individualSchool);
 
