@@ -159,24 +159,14 @@ public class MainController {
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     public ResponseEntity<Object> getSummary() throws Exception {
         Iterable<DemographicProfile> fullList = demographics.findAll();
-        ArrayList<HashMap> schoolSummaryList = new ArrayList<>();
+        ArrayList<ArrayList> schoolSummaryList = new ArrayList<>();
         for (DemographicProfile dp : fullList) {
+            ArrayList<Object> individualSchool = new ArrayList<>();
             AcademicPerformance ap = academicPerformances.findBySchoolId(dp.getSchoolId());
             FinancialPerformance fp = financialPerformances.findBySchoolId(dp.getSchoolId());
             OrgPerformance op = orgPerformances.findBySchoolId(dp.getSchoolId());
-            HashMap<String, String> school = new HashMap<>();
-            HashMap<String, Integer> year = new HashMap<>();
-            HashMap<String, Integer> academicMet = new HashMap<>();
-            HashMap<String, Integer> academicTot = new HashMap<>();
-            HashMap<String, Integer> financialMet = new HashMap<>();
-            HashMap<String, Integer> financialTot = new HashMap<>();
-            HashMap<String, Integer> orgMet = new HashMap<>();
-            HashMap<String, Integer> orgTot = new HashMap<>();
-            HashMap<String, String> academicPercent = new HashMap<>();
-            HashMap<String, String> financialPercent = new HashMap<>();
-            HashMap<String, String> orgPercent = new HashMap<>();
-            school.put("school", dp.getSchoolName());
-            year.put("year", dp.getYearOpened());
+            individualSchool.add(dp.getSchoolName());
+            individualSchool.add(dp.getYearOpened());
             Class c1 = ap.getClass();
             ArrayList<Object> fieldValues = new ArrayList<>();
             Field[] fields = c1.getDeclaredFields();
@@ -195,11 +185,9 @@ public class MainController {
                     notMetCount++;
                 }
             }
-            academicMet.put("Met", metCount);
-            academicTot.put("Total", metCount + notMetCount);
-            DecimalFormat df = new DecimalFormat("#%");
-            String acPer = df.format(metCount / (metCount + notMetCount));
-            academicPercent.put("academic%", acPer);
+            individualSchool.add(metCount);
+            individualSchool.add(metCount + notMetCount);
+
 
 
             Class c2 = fp.getClass();
@@ -220,11 +208,9 @@ public class MainController {
                     finNotMetCount++;
                 }
             }
-            financialMet.put("Met", finMetCount);
-            financialTot.put("Total", finMetCount + finNotMetCount);
-            DecimalFormat df2 = new DecimalFormat("#%");
-            String finPer = df2.format(finMetCount / (finMetCount + finNotMetCount));
-            financialPercent.put("financial%", finPer);
+            individualSchool.add(finMetCount);
+            individualSchool.add(finMetCount + finNotMetCount);
+
 
             Class c3 = op.getClass();
             ArrayList<Object> orgValues = new ArrayList<>();
@@ -244,23 +230,16 @@ public class MainController {
                     orgNotMetCount++;
                 }
             }
-            orgMet.put("Met", orgMetCount);
-            orgTot.put("Total", orgMetCount + orgNotMetCount);
-            DecimalFormat df3 = new DecimalFormat("#%");
-            String orgPer = df3.format(orgMetCount / (orgMetCount + orgNotMetCount));
-            orgPercent.put("org%", orgPer);
+            individualSchool.add(orgMetCount);
+            individualSchool.add(orgMetCount + orgNotMetCount);
+            float academicPercentMet = ((float) metCount / (metCount + notMetCount));
+            float financialPercentMet = ((float) finMetCount / (finMetCount + finNotMetCount));
+            float orgPercentMet = ((float) orgMetCount / (orgMetCount + orgNotMetCount));
+            individualSchool.add(academicPercentMet * 100);
+            individualSchool.add(financialPercentMet * 100);
+            individualSchool.add(orgPercentMet * 100);
 
-            schoolSummaryList.add(school);
-            schoolSummaryList.add(year);
-            schoolSummaryList.add(academicMet);
-            schoolSummaryList.add(academicTot);
-            schoolSummaryList.add(financialMet);
-            schoolSummaryList.add(financialTot);
-            schoolSummaryList.add(orgMet);
-            schoolSummaryList.add(orgTot);
-            schoolSummaryList.add(academicPercent);
-            schoolSummaryList.add(financialPercent);
-            schoolSummaryList.add(orgPercent);
+            schoolSummaryList.add(individualSchool);
 
         }
         return new ResponseEntity<Object>(schoolSummaryList, HttpStatus.OK);
