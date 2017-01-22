@@ -16,6 +16,8 @@ public class AcademicProfile {
     @Column
     public String scReadyElEng;
     @Column
+    public String scReadyElMath;
+    @Column
     public String scReadyMideng;
     @Column
     public String scReadyMidmath;
@@ -49,9 +51,10 @@ public class AcademicProfile {
     public AcademicProfile() {
     }
 
-    public AcademicProfile(String schoolId, String scReadyElEng, String scReadyMideng, String scReadyMidmath, String hsActAvgActEng, String hsActAvgActRead, String hsActAvgActSci, String hsActAvgActMath, String hsActAvgActComp, String hsKeyCertReading, String hsKeyCertLocating, String hsKeyCertMath, String hsKeyCertBronze, String gradFourYear, String gradFiveYear, String eocEng, String eocAlg) {
+    public AcademicProfile(String schoolId, String scReadyElEng, String scReadyElMath, String scReadyMideng, String scReadyMidmath, String hsActAvgActEng, String hsActAvgActRead, String hsActAvgActSci, String hsActAvgActMath, String hsActAvgActComp, String hsKeyCertReading, String hsKeyCertLocating, String hsKeyCertMath, String hsKeyCertBronze, String gradFourYear, String gradFiveYear, String eocEng, String eocAlg) {
         this.schoolId = schoolId;
         this.scReadyElEng = scReadyElEng;
+        this.scReadyElMath = scReadyElMath;
         this.scReadyMideng = scReadyMideng;
         this.scReadyMidmath = scReadyMidmath;
         this.hsActAvgActEng = hsActAvgActEng;
@@ -211,5 +214,13 @@ public class AcademicProfile {
 
     public void setEocAlg(String eocAlg) {
         this.eocAlg = eocAlg;
+    }
+
+    public String getScReadyElMath() {
+        return scReadyElMath;
+    }
+
+    public void setScReadyElMath(String scReadyElMath) {
+        this.scReadyElMath = scReadyElMath;
     }
 }
