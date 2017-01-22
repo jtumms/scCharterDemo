@@ -190,6 +190,7 @@ public class MainController {
 
 
 
+
             Class c2 = fp.getClass();
             ArrayList<Object> financialValues = new ArrayList<>();
             Field[] fields2 = c2.getDeclaredFields();
@@ -238,6 +239,7 @@ public class MainController {
             individualSchool.add(String.format("%.1f", academicPercentMet));
             individualSchool.add(String.format("%.1f", financialPercentMet));
             individualSchool.add(String.format("%.1f", orgPercentMet));
+            individualSchool.add(dp.getSchoolId());
 
             schoolSummaryList.add(individualSchool);
 
