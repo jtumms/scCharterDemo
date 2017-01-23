@@ -1,5 +1,7 @@
 package com.tummsmedia.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tummsmedia.entities.*;
 import com.tummsmedia.services.*;
 import jodd.json.JsonParser;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by john.tumminelli on 1/18/17.
@@ -246,4 +249,28 @@ public class MainController {
         }
         return new ResponseEntity<Object>(schoolSummaryList, HttpStatus.OK);
     }
+    @RequestMapping(value = "/add-performance-data", method = RequestMethod.POST)
+    public HttpStatus addData(@RequestBody ArrayList<HashMap> groupArray) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonParser parser = new JsonParser();
+        String dpString = mapper.writeValueAsString(groupArray.get(0));
+        String aProfString = mapper.writeValueAsString(groupArray.get(1));
+        String aPerfString = mapper.writeValueAsString(groupArray.get(2));
+        String finPerfString = mapper.writeValueAsString(groupArray.get(3));
+        String orgString = mapper.writeValueAsString(groupArray.get(4));
+        DemographicProfile dp = parser.parse(dpString, DemographicProfile.class);
+        AcademicProfile acProf = parser.parse(aProfString, AcademicProfile.class);
+        AcademicPerformance acPerf = parser.parse(aPerfString, AcademicPerformance.class);
+        FinancialPerformance fp = parser.parse(finPerfString, FinancialPerformance.class);
+        OrgPerformance op = parser.parse(orgString, OrgPerformance.class);
+        demographics.save(dp);
+        academicProfiles.save(acProf);
+        academicPerformances.save(acPerf);
+        financialPerformances.save(fp);
+        orgPerformances.save(op);
+        return HttpStatus.OK;
+    }
+
+
+
 }
