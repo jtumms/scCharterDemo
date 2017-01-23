@@ -271,7 +271,7 @@ public class MainController {
         return HttpStatus.OK;
     }
     @RequestMapping(value = "/getSchoolId", method = RequestMethod.GET)
-    public String getNewId() throws Exception {
+    public HashMap<String,String> getNewId() throws Exception {
         Iterable<DemographicProfile> allList = demographics.findAll();
         ArrayList<String> idList = new ArrayList<>();
         for (DemographicProfile dp : allList){
@@ -288,7 +288,9 @@ public class MainController {
         System.out.println(max);
         String newMax = Integer.toString(max + 1);
         String newSchoolId = String.format("scch0%s", newMax);
-        return newSchoolId;
+        HashMap<String,String> idMap = new HashMap<>();
+        idMap.put("maxSchoolID",newSchoolId);
+        return idMap;
     }
 
 
