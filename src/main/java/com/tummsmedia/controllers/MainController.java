@@ -270,6 +270,26 @@ public class MainController {
         orgPerformances.save(op);
         return HttpStatus.OK;
     }
+    @RequestMapping(value = "/getSchoolId", method = RequestMethod.GET)
+    public String getNewId() throws Exception {
+        Iterable<DemographicProfile> allList = demographics.findAll();
+        ArrayList<String> idList = new ArrayList<>();
+        for (DemographicProfile dp : allList){
+            idList.add(dp.getSchoolId());
+        }
+
+        int max = Integer.valueOf(idList.get(0).substring(idList.get(0).length() - 2));
+
+        for (int i = 1; i < idList.size(); i++) {
+            if (Integer.valueOf(idList.get(i).substring(idList.get(i).length() - 2)) > max) {
+                max = Integer.valueOf(idList.get(i).substring(idList.get(i).length() - 2));
+            }
+        }
+        System.out.println(max);
+        String newMax = Integer.toString(max + 1);
+        String newSchoolId = String.format("scch0%s", newMax);
+        return newSchoolId;
+    }
 
 
 
