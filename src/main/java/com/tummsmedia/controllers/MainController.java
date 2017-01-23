@@ -285,11 +285,12 @@ public class MainController {
                 max = Integer.valueOf(idList.get(i).substring(idList.get(i).length() - 2));
             }
         }
-        System.out.println(max);
         String newMax = Integer.toString(max + 1);
         String newSchoolId = String.format("scch0%s", newMax);
         HashMap<String,String> idMap = new HashMap<>();
         idMap.put("maxSchoolID",newSchoolId);
+
+        System.out.println("successful request from client - newSchoolId -- " + newSchoolId);
         return idMap;
     }
 
