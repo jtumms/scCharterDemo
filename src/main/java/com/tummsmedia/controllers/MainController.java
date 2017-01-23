@@ -26,6 +26,7 @@ import java.util.Map;
 /**
  * Created by john.tumminelli on 1/18/17.
  */
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class MainController {
     @Autowired
