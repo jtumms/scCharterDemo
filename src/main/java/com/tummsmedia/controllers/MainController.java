@@ -269,6 +269,11 @@ public class MainController {
         academicPerformances.save(acPerf);
         financialPerformances.save(fp);
         orgPerformances.save(op);
+        System.out.println(dpString);
+        System.out.println(aProfString);
+        System.out.println(aPerfString);
+        System.out.println(finPerfString);
+        System.out.println(orgString);
         return HttpStatus.OK;
     }
     @RequestMapping(value = "/getSchoolId", method = RequestMethod.GET)
